@@ -1,0 +1,5 @@
+numpy
+opencv-python
+scikit-image
+matplotlib
+# Hanya bila ada foto HEIC (iPhone): pip install pillow pillow-heif
