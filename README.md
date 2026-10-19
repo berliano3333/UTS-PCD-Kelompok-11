@@ -21,34 +21,24 @@ deteksi_cacat_ubin/
 ## Pemasangan
 ```
 pip install -r requirements.txt
-```
-(Foto HEIC iPhone: `pip install pillow pillow-heif`)
 
 ## Struktur dataset
 ```
 dataset/
 ├── images/
-│   ├── normal/   foto001.jpg ...
+│   ├── normal/   foto.jpg ...
 │   ├── terang/   ...
 │   └── redup/    ...
 └── masks/                  # nama sama dengan citra (.png atau .jpg), putih = retak
-    ├── normal/   foto001.png ...
+    ├── normal/   foto1.jpg ...
     ├── terang/
     └── redup/
 ```
-- Dataset: 20 citra normal, 15 terang, 15 redup (50 citra, semua bermask).
-- Foto dari ubin yang sama diberi awalan grup: `ubinA__foto01.jpg`, agar tidak terbagi ke dev dan test.
-- Mask harus digambar pada foto dengan orientasi yang sama.
-- Citra dan mask boleh JPG. PNG lebih disarankan untuk mask karena garis retak tipis bisa buram akibat kompresi JPG.
 
-## Menjalankan
+## Cara Menjalankan
 ```
 python run_all.py --data dataset --scratch            # lengkap (pakai operasi buatan sendiri)
-python run_all.py --data dataset --scratch --no-tune  # lebih cepat, tanpa penyetelan parameter
-python run_all.py --data dataset                      # tanpa operasi buatan sendiri (OpenCV)
-python verify_scratch.py --data dataset               # hanya verifikasi vs OpenCV
 ```
-Opsi lain: `--select dice|f1_tol`, `--methods ridge,otsu,...`, `--tol 4`, `--size 1280`, `--out results`.
 
 ## Tahap pipeline
 1. Pra-pemrosesan: ubah ukuran (sisi terpanjang 1280), konversi grayscale/Lab, Gaussian blur.
@@ -75,14 +65,12 @@ Opsi lain: `--select dice|f1_tol`, `--methods ridge,otsu,...`, `--tol 4`, `--siz
 | `failures/` | panel kasus gagal terburuk (untuk analisis kegagalan) |
 | `verifikasi_scratch.csv`, `verifikasi_ringkasan.csv` | waktu dan selisih piksel vs OpenCV |
 
-## Catatan desain operasi buatan sendiri
-- `convolve2d` membalik kernel (konvolusi sejati), sedangkan `cv2.filter2D` berupa korelasi.
-  Ketiga kernel Hessian di `crack.py` simetris 180 derajat, sehingga hasilnya sama. Untuk kernel
-  tidak simetris (mis. Sobel), kernel harus dibalik pada salah satu jalur.
-- `available()` menjalankan uji mandiri kecil; operasi yang gagal uji dimatikan otomatis.
+## Dua Operasi Pilihan:
+Konvolusi 2D dengan erosi dan
+dilasi
 
 ## Dataset publik (bila dipakai)
-Isi sumber dan lisensi di sini: _(belum ada)_
+Tidak menggunakan dataset publik
 
 ## Privasi
-Citra yang memuat wajah atau plat nomor orang lain hanya dipakai dengan izin dan disamarkan pada laporan.
+Citra tidak menggunakan wajah atau gambar pribadi
